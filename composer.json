@@ -1,0 +1,12 @@
+{
+    "require": {
+	"phpunit/phpunit": "4.8.31 "
+    }, 
+
+    "autoload": {	
+     "psr-4": {
+     	"JustRouter\\": "src/JustRouter",
+     	"Tests\\": "/tests"
+     }
+	}
+}

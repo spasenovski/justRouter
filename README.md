@@ -66,7 +66,7 @@ With 115 routes and 2 dynamic variables :
 
 1.First route - from 0.003 to 0.01 seconds  
 2.Last route  - from 0.003 to 0.014 seconds  
-3.Route in the middle  - 0.05 to 0.11  
+3.Route in the middle  - 0.005 to 0.11  
 
 These benchmarks don't paint the full pictures because of the way the library is designed :
 
