@@ -5,12 +5,12 @@ namespace JustRouter;
 class Matcher
 {
 	/**
-		* @var RouteCollection
+	   * @var RouteCollection
 	*/
 	private $routes;
 
 	/**
-		* @var string
+	   * @var string
 	*/
 	private $path;
 
@@ -20,21 +20,21 @@ class Matcher
 	private $parser;
 
 	/**
-	  * @var bool
+	   * @var bool
 	*/
 	const MATCH = 1;
 
 	/**
-	  * @var bool
+	   * @var bool
 	*/
 	const NO_MATCH = 0;
 
 	/**
-		* Constructor.
-		*
-		* @param RouteCollection $routes  					A RouteCollection instance
-		* @param JustRoute\Parser          $parser
-     */
+	 * Constructor.
+	 *
+	 * @param RouteCollection $routes  					A RouteCollection instance
+	 * @param JustRoute\Parser          $parser
+    */
 	public function __construct(RouteCollection $collection, Parser $parser)
 	{
 		$this->routes = $collection;
@@ -42,12 +42,12 @@ class Matcher
 	}
 
 	/**
-		* Matches the path string to one of the requests
-		*
-		* @param $path                     $string
-		*
-		* @returns array
-     */
+	 * Matches the path string to one of the requests
+	 *
+	 * @param $path                     $string
+	 *
+	 * @returns array
+    */
 	public function matchRequest($path)
 	{
 		$return 	  = array();
@@ -98,7 +98,7 @@ class Matcher
 							$isMatched = (!$match) ? 0 : $isMatched;
 						}
 
-						$variable 					 = str_replace(['{', '}'], '', $variable);
+						$variable = str_replace(['{', '}'], '', $variable);
 						$variablesInRoute[$variable] = $parsePath['segments'][$i];
 					}
 				}
