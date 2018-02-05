@@ -3,19 +3,18 @@
 namespace JustRouter;
 
 /**
-	* Takes an instance of Routing\Route object
-	* Extracts the variables from placeholders
-*/
-
+ * Takes an instance of Routing\Route object
+ * Extracts the variables from placeholders
+ */
 class Parser
 {
 	/**
-		* Parse the current url into segments
-		*
-		* @param string
-		*
-		* @return array
-	*/
+	 * Parse the current url into segments
+	 *
+	 * @param string
+	 *
+	 * @return array
+	 */
 	public function parsePath($path)
 	{
 		if(!is_string($path))
@@ -55,7 +54,7 @@ class Parser
         	$parts = explode('}', $parts[1]);
         	return [
         		'regex' => $parts[0],
-        		'variable' => $variable];
+        		'variable' => ltrim($variable, '{	')];
     	}
 
     	return 0;

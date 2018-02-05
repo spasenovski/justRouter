@@ -5,36 +5,36 @@ namespace JustRouter;
 class Matcher
 {
 	/**
-	   * @var RouteCollection
-	*/
+	 * @var RouteCollection
+	 */
 	private $routes;
 
 	/**
-	   * @var string
-	*/
+	 * @var string
+	 */
 	private $path;
 
 	/**
-	   * @var JustRoute\Parser
-	*/
+	 * @var JustRoute\Parser
+	 */
 	private $parser;
 
 	/**
-	   * @var bool
-	*/
+	 * @var bool
+	 */
 	const MATCH = 1;
 
 	/**
-	   * @var bool
-	*/
+	 * @var bool
+	 */
 	const NO_MATCH = 0;
 
 	/**
 	 * Constructor.
-	 *
+     *
 	 * @param RouteCollection $routes  					A RouteCollection instance
 	 * @param JustRoute\Parser          $parser
-    */
+     */
 	public function __construct(RouteCollection $collection, Parser $parser)
 	{
 		$this->routes = $collection;
@@ -44,15 +44,15 @@ class Matcher
 	/**
 	 * Matches the path string to one of the requests
 	 *
-	 * @param $path                     $string
+	 * @param string $path The URI
 	 *
 	 * @returns array
-    */
+     */
 	public function matchRequest($path)
 	{
 		$return 	  = array();
 		$routes 	  = $this->routes->allRoutes();
-		$parsePath 	  = $this->parser->parsePath($path);
+		$parsedPath   = $this->parser->parsePath($path);
 		$isMatched 	  = 1;
 		$pathSegments = substr_count($path, '/');
 
@@ -67,49 +67,68 @@ class Matcher
 				$parsedRoute 	  = $this->parser->parsePath($route->getPath());
 				$count       	  = $parsedRoute['segcount'];
 				$segments    	  = $parsedRoute['segments'];
-				$isMatched   	  = 1;
-				$variablesInRoute = [];
 
-				for($i = 0; $i < $count; $i++)
+				$isMatched = self::matchSegments($segments, $parsedPath);
+
+				if($isMatched['isMatched'])
 				{
-					if(Parser::isSegmentStatic($segments[$i]))
-					{
-						if(!Parser::segmentsMatch($segments[$i], $parsePath['segments'][$i]))
-						{
-							$isMatched = 0;
-						}
-					}
-					else
-					{
-						$variable = $segments[$i];
-
-						if(is_numeric($variable))
-						{
-							throw new RouteException('Variable ' . $variable . ' cannot be a number');
-						}
-
-						if(Parser::isRegex($variable))
-						{
-							$parsedReg = Parser::parseVarRegex($variable);
-							$varRegex  = '#' . $parsedReg['regex'] . '#';
-							$variable  = $parsedReg['variable'];
-
-							$match 	   = preg_match($varRegex, $parsePath['segments'][$i]);
-							$isMatched = (!$match) ? 0 : $isMatched;
-						}
-
-						$variable = str_replace(['{', '}'], '', $variable);
-						$variablesInRoute[$variable] = $parsePath['segments'][$i];
-					}
-				}
-
-				if($isMatched)
-				{
-					return [self::MATCH, $variablesInRoute, $route->getController(), $route->getPath()];
+					return [self::MATCH, $isMatched['variables'], $route->getController(), $route->getPath()];
 				}
 		}
 
 		return [self::NO_MATCH, [], $route->getController(), $route->getPath()];
+	}
+
+	/**
+	 * Matches the path string to one of the requests
+	 *
+	 * @param array $segments   The route segments.
+	 *
+	 * @param array $parsedPath The parsed URI.
+	 *
+	 * @returns array
+     */
+	protected static function matchSegments(array $segments, array $parsedPath)
+	{
+		$variablesInRoute = [];
+		$isMatched   	  = 1;
+
+		foreach($segments as $key => $segment)
+		{
+			if(Parser::isSegmentStatic($segment))
+			{
+				if(!Parser::segmentsMatch($segment, $parsedPath['segments'][$key]))
+				{
+					return ['isMatched' => 0,  'variables' => ''];
+				}
+			}
+			else
+			{
+				$variable = $segment;
+
+				if(is_numeric($variable))
+				{
+					throw new RouteException('Variable ' . $variable . ' cannot be a number');
+				}
+
+				if(Parser::isRegex($variable))
+				{
+					$parsedReg = Parser::parseVarRegex($variable);
+					$varRegex  = '#' . $parsedReg['regex'] . '#';
+					$variable  = $parsedReg['variable'];
+
+					$match 	   = preg_match($varRegex, $parsedPath['segments'][$key]);
+					$isMatched = (!$match) ? 0 : $isMatched;
+				}
+
+				$variable 					 = str_replace(['{', '}'], '', $variable);
+				$variablesInRoute[$variable] = $parsedPath['segments'][$key];
+			}
+		}
+
+		if($isMatched) {
+			return ['isMatched' => 1, 'variables' => $variablesInRoute];
+		}
 	}
 
 }

@@ -49,7 +49,7 @@ class Route
 					 'controller' => $this->controller
 					);
 	}
-
+	
 	/**
 		* get the path
 		*

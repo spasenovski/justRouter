@@ -8,16 +8,16 @@ namespace JustRouter;
 
 class RouteCollection
 {
-	 /**
-     	* @var array
+    /**
+     * @var array
      */
     public $routes = array();
 
     /**
-	     * Adds a route.
-	     *
-	     * @param string $name  The route name
-	     * @param Route  $route A Route instance
+     * Adds a route.
+     *
+     * @param string $name  The route name
+     * @param Route  $route A Route instance
      */
     public function addRoute(array $httpMethods, $path, $controller, $name = '')
     {
@@ -26,10 +26,10 @@ class RouteCollection
     }
 
     /**
-         * Adds a GET route.
-         *
-         * @param string $name  The route name
-         * @param Route  $route A Route instance
+     * Adds a GET route.
+     *
+     * @param string $name  The route name
+     * @param Route  $route A Route instance
      */
     public function get($path, $controller, $name = '')
     {
@@ -37,10 +37,10 @@ class RouteCollection
     }
 
     /**
-         * Adds a POST route.
-         *
-         * @param string $name  The route name
-         * @param Route  $route A Route instance
+     * Adds a POST route.
+     *
+     * @param string $name  The route name
+     * @param Route  $route A Route instance
      */
     public function post($path, $controller, $name = '')
     {
@@ -48,10 +48,10 @@ class RouteCollection
     }
 
     /**
-         * Adds a PUT route.
-         *
-         * @param string $name  The route name
-         * @param Route  $route A Route instance
+     * Adds a PUT route.
+     *
+     * @param string $name  The route name
+     * @param Route  $route A Route instance
      */
     public function put($path, $controller, $name = '')
     {
@@ -59,10 +59,10 @@ class RouteCollection
     }
 
     /**
-         * Adds a Patch route.
-         *
-         * @param string $name  The route name
-         * @param Route  $route A Route instance
+     * Adds a Patch route.
+     *
+     * @param string $name  The route name
+     * @param Route  $route A Route instance
      */
     public function patch($path, $controller, $name = '')
     {
@@ -70,10 +70,10 @@ class RouteCollection
     }
 
     /**
-         * Adds a DELETE route.
-         *
-         * @param string $name  The route name
-         * @param Route  $route A Route instance
+     * Adds a DELETE route.
+     *
+     * @param string $name  The route name
+     * @param Route  $route A Route instance
      */
     public function delete($path, $controller, $name = '')
     {
@@ -108,7 +108,7 @@ class RouteCollection
      * Returns all routes in this collection.
      *
      * @return Route[] An array of routes
-         */
+     */
     public function allRoutes()
     {
         return $this->routes;
