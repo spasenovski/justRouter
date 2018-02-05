@@ -62,11 +62,11 @@ How fast is the library?
 I still don't have full benchmarks to backup my claims, but from what I have tested
 so far on my local machine :
 
-With 115 routes and 2 dynamic variables :
+With 115 routes and 5 static parts and 4 dynamic variables :
 
-1.First route - from 0.003 to 0.01 seconds  
-2.Last route  - from 0.003 to 0.014 seconds  
-3.Route in the middle  - 0.005 to 0.11  
+1.First route - from 0.003 to 0.004 seconds  
+2.Last route  - from 0.004 to 0.006 seconds  
+3.Route in the middle  - 0.003 to 0.006  
 
 These benchmarks don't paint the full pictures because of the way the library is designed :
 
