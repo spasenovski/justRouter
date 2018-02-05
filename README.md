@@ -88,7 +88,7 @@ if you add 1000 or 100 routes, because it performs search and match only on thos
 depending on the number of segments of the URI you provide(or the server provides).  
 
 The downside of course is what happens when we have routes with same number of segments.  
-This is the example in my benchmark. Even then it's insanely fast. In a real world case,  
+Such is the example in my benchmark. Even then it's insanely fast. In a real world case,  
 it would take full benefith from this way of matching.
 
 Credits
