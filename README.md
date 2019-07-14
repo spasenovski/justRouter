@@ -18,12 +18,12 @@ require '/path/to/vendor/autoload.php';
 
 $routes = new JustRouter\RouteCollection();
 
-$routes->addRoute(['GET'], '/in/{world}/{person}/shouted', function() {
-    echo "Where is Padme?";
+$routes->addRoute(['GET'], '/company/{$companyId}/department/{$departmentId}', function() {
+    // Handle 
     exit();
 });
 
-$pathFromServer = '/in/coruscant/lordVader/shouted';
+$pathFromServer = '/company/1/department/5';
 
 $matcher = new JustRouter\Matcher($routes, new JustRouter\Parser());
 $match = $matcher->matchRequest($test);
@@ -31,11 +31,11 @@ $match = $matcher->matchRequest($test);
 var_dump($match) =>  [
     '1',                             // 1|0 Route has been matched| ... or not,
     [
-        'world'  => 'coruscant',     // Vars
-        'person' => 'lordVader'
+        'company'  => '1',     // Vars
+        'department' => '5'
     ]
     'object(Closure)#'               // The controller, in this case the callable,
-    '/in/{world}/a/{person}/shouted' // The path that was matched
+    '/company/1/department/5' // The path that was matched
 ]
 
 ```
@@ -48,9 +48,9 @@ This library is still in beta version, it is missing some features to be product
 Todo
 -----
 
-1.) Add more detailed documentation  
-2.) Add route groups  
-3.) Add route caching  
+1.) Add route groups <br>
+2.) Add route caching <br>
+3.) Add ability for better handlers, class methods or function names <br>
 4.) Add some benchmarks  
 
 
@@ -89,12 +89,12 @@ depending on the number of segments of the URI you provide(or the server provide
 
 The downside of course is what happens when we have routes with same number of segments.  
 Such is the example in my benchmark. Even then it's insanely fast. In a real world case,  
-it would take full benefith from this way of matching.
+it would take full benefit from this way of matching.
 
 Credits
 --------
 
-The API of the library and the class design have been largely influenced by nikic's [fastRoute](https://github.com/nikic/FastRoute)  
+The API of the library and the class design ( Not implementation itself ) have been largely influenced by nikic's [fastRoute](https://github.com/nikic/FastRoute)  
 and [Symfony's router](https://github.com/symfony/routing)
 
 

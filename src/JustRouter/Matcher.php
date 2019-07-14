@@ -32,8 +32,8 @@ class Matcher
 	/**
 	 * Constructor.
      *
-	 * @param RouteCollection $routes  					A RouteCollection instance
-	 * @param JustRoute\Parser          $parser
+     * @param RouteCollection $collection
+	 * @param Parser          $parser
      */
 	public function __construct(RouteCollection $collection, Parser $parser)
 	{
@@ -45,10 +45,12 @@ class Matcher
 	 * Matches the path string to one of the requests
 	 *
 	 * @param string $path The URI
+     *
+     * @throws \Exception
 	 *
-	 * @returns array
+	 * @return array
      */
-	public function matchRequest($path)
+	public function matchRequest(string $path)
 	{
 		$return 	  = array();
 		$routes 	  = $this->routes->allRoutes();
@@ -68,7 +70,7 @@ class Matcher
 				$count       	  = $parsedRoute['segcount'];
 				$segments    	  = $parsedRoute['segments'];
 
-				$isMatched = self::matchSegments($segments, $parsedPath);
+				$isMatched = $this->matchSegments($segments, $parsedPath);
 
 				if($isMatched['isMatched'])
 				{
@@ -83,12 +85,13 @@ class Matcher
 	 * Matches the path string to one of the requests
 	 *
 	 * @param array $segments   The route segments.
-	 *
 	 * @param array $parsedPath The parsed URI.
+     *
+     * @throws RouteException
 	 *
-	 * @returns array
+	 * @return array
      */
-	protected static function matchSegments(array $segments, array $parsedPath)
+	protected function matchSegments(array $segments, array $parsedPath)
 	{
 		$variablesInRoute = [];
 		$isMatched   	  = 1;

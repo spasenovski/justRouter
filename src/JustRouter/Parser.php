@@ -12,20 +12,16 @@ class Parser
 	 * Parse the current url into segments
 	 *
 	 * @param string
-	 *
+     *
+	 * @throws \Exception
 	 * @return array
 	 */
-	public function parsePath($path)
+	public function parsePath(string $path)
 	{
-		if(!is_string($path))
-		{
-			throw new \Exception('Path must be string');
-		}
-
 		return self::getSegments($path);
 	}
 
-	public static function isSegmentStatic($segment)
+	public static function isSegmentStatic(string $segment)
 	{
 		if(strpos($segment, '{') === false)
 		{
@@ -35,7 +31,7 @@ class Parser
 		return false;
 	}
 
-	public static function isRegex($segment)
+	public static function isRegex(string $segment)
 	{
 		if(strpos($segment, ':') !== false && substr_count($segment, ':') == 1 )
 		{
@@ -45,7 +41,7 @@ class Parser
 		return false;
 	}
 
-	public static function parseVarRegex($segment)
+	public static function parseVarRegex(string $segment)
 	{
 		$parts    = explode(':', $segment);
 		$variable = $parts[0];
@@ -60,7 +56,7 @@ class Parser
     	return 0;
 	}
 
-	public static function segmentsMatch($first, $second)
+	public static function segmentsMatch(string $first, string $second)
 	{
 		if(strcmp($first, $second) === 0) {
 			return true;
@@ -68,7 +64,7 @@ class Parser
 		return false;
 	}
 
-	private static function getSegments($string)
+	private static function getSegments(string $string)
 	{
 		if(strcmp($string, '/') == 0)
 		{
