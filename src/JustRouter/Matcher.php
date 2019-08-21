@@ -4,134 +4,124 @@ namespace JustRouter;
 
 class Matcher
 {
-	/**
-	 * @var RouteCollection
-	 */
-	private $routes;
+    /**
+     * @var RouteCollection
+     */
+    private $routes;
 
-	/**
-	 * @var string
-	 */
-	private $path;
+    /**
+     * @var string
+     */
+    private $path;
 
-	/**
-	 * @var JustRoute\Parser
-	 */
-	private $parser;
+    /**
+     * @var JustRouter\Parser
+     */
+    private $parser;
 
-	/**
-	 * @var bool
-	 */
-	const MATCH = 1;
+    /**
+     * @var bool
+     */
+    const MATCH = 1;
 
-	/**
-	 * @var bool
-	 */
-	const NO_MATCH = 0;
+    /**
+     * @var bool
+     */
+    const NO_MATCH = 0;
 
-	/**
-	 * Constructor.
+    /**
+     * Constructor.
      *
      * @param RouteCollection $collection
-	 * @param Parser          $parser
+     * @param Parser $parser
      */
-	public function __construct(RouteCollection $collection, Parser $parser)
-	{
-		$this->routes = $collection;
-		$this->parser = $parser;
-	}
+    public function __construct(RouteCollection $collection, Parser $parser)
+    {
+        $this->routes = $collection;
+        $this->parser = $parser;
+    }
 
-	/**
-	 * Matches the path string to one of the requests
-	 *
-	 * @param string $path The URI
+    /**
+     * Matches the path string to one of the requests
+     *
+     * @param string $path The URI
      *
      * @throws \Exception
-	 *
-	 * @return array
+     *
+     * @return array
      */
-	public function matchRequest(string $path)
-	{
-		$return 	  = array();
-		$routes 	  = $this->routes->allRoutes();
-		$parsedPath   = $this->parser->parsePath($path);
-		$isMatched 	  = 1;
-		$pathSegments = substr_count($path, '/');
+    public function matchRequest(string $path)
+    {
+        $routes = $this->routes->allRoutes();
+        $parsedPath = $this->parser->parsePath($path);
+        $pathSegments = substr_count($path, '/');
 
-		if(!isset($routes[$pathSegments]))
-		{
-			return [self::NO_MATCH, [], '', ''];
-		}
+        if (!isset($routes[$pathSegments])) {
+            return [self::NO_MATCH, [], '', ''];
+        }
 
-		$routes = $routes[$pathSegments];
+        $routes = $routes[$pathSegments];
 
-		foreach($routes as $key => $route) {
-				$parsedRoute 	  = $this->parser->parsePath($route->getPath());
-				$count       	  = $parsedRoute['segcount'];
-				$segments    	  = $parsedRoute['segments'];
+        foreach ($routes as $key => $route) {
+            $parsedRoute = $this->parser->parsePath($route->getPath());
+            $segments = $parsedRoute['segments'];
 
-				$isMatched = $this->matchSegments($segments, $parsedPath);
+            $isMatched = $this->matchSegments($segments, $parsedPath);
 
-				if($isMatched['isMatched'])
-				{
-					return [self::MATCH, $isMatched['variables'], $route->getController(), $route->getPath()];
-				}
-		}
+            if ($isMatched['isMatched']) {
+                return [self::MATCH, $isMatched['variables'], $route->getController(), $route->getPath()];
+            }
+        }
 
-		return [self::NO_MATCH, [], $route->getController(), $route->getPath()];
-	}
+        return [self::NO_MATCH, [], $route->getController(), $route->getPath()];
+    }
 
-	/**
-	 * Matches the path string to one of the requests
-	 *
-	 * @param array $segments   The route segments.
-	 * @param array $parsedPath The parsed URI.
+    /**
+     * Matches the path string to one of the requests
+     *
+     * @param array $segments The route segments.
+     * @param array $parsedPath The parsed URI.
      *
      * @throws RouteException
-	 *
-	 * @return array
+     *
+     * @return array
      */
-	protected function matchSegments(array $segments, array $parsedPath)
-	{
-		$variablesInRoute = [];
-		$isMatched   	  = 1;
+    protected function matchSegments(array $segments, array $parsedPath)
+    {
+        $variablesInRoute = [];
+        $isMatched = 1;
 
-		foreach($segments as $key => $segment)
-		{
-			if(Parser::isSegmentStatic($segment))
-			{
-				if(!Parser::segmentsMatch($segment, $parsedPath['segments'][$key]))
-				{
-					return ['isMatched' => 0,  'variables' => ''];
-				}
-			}
-			else
-			{
-				$variable = $segment;
+        foreach ($segments as $key => $segment) {
+            if (Parser::isSegmentStatic($segment)) {
+                if (!Parser::segmentsMatch($segment, $parsedPath['segments'][$key])) {
+                    return ['isMatched' => 0, 'variables' => ''];
+                }
+            } else {
+                $variable = $segment;
 
-				if(is_numeric($variable))
-				{
-					throw new RouteException('Variable ' . $variable . ' cannot be a number');
-				}
+                if (is_numeric($variable)) {
+                    throw new RouteException('Variable ' . $variable . ' cannot be a number');
+                }
 
-				if(Parser::isRegex($variable))
-				{
-					$parsedReg = Parser::parseVarRegex($variable);
-					$varRegex  = '#' . $parsedReg['regex'] . '#';
-					$variable  = $parsedReg['variable'];
+                if (Parser::isRegex($variable)) {
+                    $parsedReg = Parser::parseVarRegex($variable);
+                    $varRegex = '#' . $parsedReg['regex'] . '#';
+                    $variable = $parsedReg['variable'];
 
-					$match 	   = preg_match($varRegex, $parsedPath['segments'][$key]);
-					$isMatched = (!$match) ? 0 : $isMatched;
-				}
+                    $match = preg_match($varRegex, $parsedPath['segments'][$key]);
+                    $isMatched = (!$match) ? 0 : $isMatched;
+                }
 
-				$variable 					 = str_replace(['{', '}'], '', $variable);
-				$variablesInRoute[$variable] = $parsedPath['segments'][$key];
-			}
-		}
+                $variable = str_replace(['{', '}'], '', $variable);
+                $variablesInRoute[$variable] = $parsedPath['segments'][$key];
+            }
+        }
 
-		if($isMatched) {
-			return ['isMatched' => 1, 'variables' => $variablesInRoute];
-		}
-	}
+        if ($isMatched) {
+            return ['isMatched' => 1, 'variables' => $variablesInRoute];
+        }
+
+        return ['isMatched' => 0];
+    }
 
 }

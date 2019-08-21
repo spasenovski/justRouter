@@ -3,9 +3,8 @@
 namespace JustRouter;
 
 /**
-	* A collection of routes
-*/
-
+ * A collection of routes
+ */
 class RouteCollection
 {
     /**
@@ -22,7 +21,7 @@ class RouteCollection
     public function addRoute(array $httpMethods, $path, $controller, $name = '')
     {
         $numberSegments                  = substr_count($path, '/');
-    	$this->routes[$numberSegments][] = new Route($httpMethods, $path, $controller);
+    	$this->routes[$numberSegments][] = new Route($httpMethods, $path, $controller, $name);
     }
 
     /**
